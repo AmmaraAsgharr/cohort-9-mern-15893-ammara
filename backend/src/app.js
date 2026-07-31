@@ -15,10 +15,6 @@ app.use(pinoHttp({ logger }));
 
 const PORT = process.env.PORT || 5000;
 
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => logger.info('MongoDB connected successfully'))
-  .catch((err) => logger.error(err, 'MongoDB connection error'));
-
 app.get('/', (req, res) => {
   res.send('Notes App Backend is running!');
 });
@@ -26,6 +22,25 @@ app.get('/', (req, res) => {
 // Error handling middleware after routes
 app.use(errorHandler);
 
-app.listen(PORT, () => {
-  logger.info(`Server running on port ${PORT}`);
-});
+// Database connection & Server startup function
+const startServer = async () => {
+  // Validate MONGO_URI existence
+  if (!process.env.MONGO_URI) {
+    logger.error('FATAL: MONGO_URI is not defined in environment variables');
+    process.exit(1);
+  }
+  try {
+    // Wait for MongoDB connection before starting the server
+    await mongoose.connect(process.env.MONGO_URI);
+    logger.info('MongoDB connected successfully');
+
+    app.listen(PORT, () => {
+      logger.info(`Server running on port ${PORT}`);
+    });
+  } catch (err) {
+    logger.error(err, 'MongoDB connection error');
+    process.exit(1);
+  }
+};
+
+startServer();
