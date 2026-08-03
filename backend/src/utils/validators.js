@@ -9,6 +9,7 @@ function validateSignup(body = {}) {
   const { name, email, password } = body;
 
   if (!isNonEmptyString(name)) errors.push('Name is required.');
+  else if (name.trim().length > 80) errors.push('Name must be 80 characters or fewer.');
   if (!isNonEmptyString(email) || !EMAIL_RE.test(email.trim())) errors.push('A valid email is required.');
   if (!isNonEmptyString(password) || password.length < 6) errors.push('Password must be at least 6 characters.');
 

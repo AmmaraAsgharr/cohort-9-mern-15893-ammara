@@ -12,7 +12,17 @@ dotenv.config();
 const logger = pino();
 const app = express();
 
-app.use(cors());
+const allowedOrigins = (process.env.CORS_ORIGIN || '')
+  .split(',')
+  .map((o) => o.trim())
+  .filter(Boolean);
+
+if (allowedOrigins.length === 0) {
+  logger.error('FATAL: CORS_ORIGIN is not defined in environment variables');
+  process.exit(1);
+}
+
+app.use(cors({ origin: allowedOrigins }));
 app.use(express.json());
 app.use(pinoHttp({ logger }));
 
