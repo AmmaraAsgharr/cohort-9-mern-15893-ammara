@@ -11,8 +11,7 @@ class ApiError extends Error {
     this.statusCode = statusCode;
   }
 }
-
-// Builds the initials shown in the avatar circle, e.g. "Ammara Asghar" -> "AA"
+// like wo jo Ammara Asghar  into AA
 function toAvatarInitials(name) {
   return name
     .trim()
@@ -22,7 +21,6 @@ function toAvatarInitials(name) {
     .join('') || '?';
 }
 
-// Shapes a Mongo user doc into exactly what the frontend 
 function toPublicUser(userDoc) {
   return {
     id: userDoc._id.toString(),
@@ -41,35 +39,54 @@ function signToken(userId) {
 }
 
 async function signup({ name, email, password }) {
-  const existing = await User.findOne({ email: email.trim().toLowerCase() });
-  if (existing) {
-    throw new ApiError(409, 'An account with this email already exists.');
+  try {
+    const existing = await User.findOne({ email: email.trim().toLowerCase() });
+    if (existing) {
+      throw new ApiError(409, 'An account with this email already exists.');
+    }
+
+    const hashed = await bcrypt.hash(password, SALT_ROUNDS);
+
+    let user;
+    try {
+      user = await User.create({
+        name: name.trim(),
+        email: email.trim().toLowerCase(),
+        password: hashed,
+      });
+    } catch (err) {
+      if (err.code === 11000) {
+        throw new ApiError(409, 'An account with this email already exists.');
+      }
+      throw err;
+    }
+
+    const token = signToken(user._id);
+    return { token, user: toPublicUser(user) };
+  } catch (err) {
+    if (err instanceof ApiError) throw err;
+    throw new ApiError(500, 'Something went wrong while creating your account.');
   }
-
-  const hashed = await bcrypt.hash(password, SALT_ROUNDS);
-  const user = await User.create({
-    name: name.trim(),
-    email: email.trim().toLowerCase(),
-    password: hashed,
-  });
-
-  const token = signToken(user._id);
-  return { token, user: toPublicUser(user) };
 }
 
 async function login({ email, password }) {
-  const user = await User.findOne({ email: email.trim().toLowerCase() }).select('+password');
-  if (!user) {
-    throw new ApiError(401, 'Invalid email or password.');
-  }
+  try {
+    const user = await User.findOne({ email: email.trim().toLowerCase() }).select('+password');
+    if (!user) {
+      throw new ApiError(401, 'Invalid email or password.');
+    }
 
-  const match = await bcrypt.compare(password, user.password);
-  if (!match) {
-    throw new ApiError(401, 'Invalid email or password.');
-  }
+    const match = await bcrypt.compare(password, user.password);
+    if (!match) {
+      throw new ApiError(401, 'Invalid email or password.');
+    }
 
-  const token = signToken(user._id);
-  return { token, user: toPublicUser(user) };
+    const token = signToken(user._id);
+    return { token, user: toPublicUser(user) };
+  } catch (err) {
+    if (err instanceof ApiError) throw err;
+    throw new ApiError(500, 'Something went wrong while logging you in.');
+  }
 }
 
 module.exports = { signup, login, toPublicUser, ApiError };
