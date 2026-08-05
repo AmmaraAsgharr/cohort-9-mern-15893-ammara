@@ -1,8 +1,9 @@
 const { Note } = require('../models/note.model');
 const { ApiError } = require('./auth.service');
 
+
 function calculateWordCount(content) {
-  return content.trim().split(/\s+/).filter((word) => word.length > 0).length;
+  return (content ?? '').trim().split(/\s+/).filter((word) => word.length > 0).length;
 }
 
 async function createNote({ userId, title, content, color, tags }) {
@@ -10,13 +11,14 @@ async function createNote({ userId, title, content, color, tags }) {
     const wordCount = calculateWordCount(content);
 
     const note = await Note.create({
-      userId,
-      title: title || 'Untitled',
-      content,
-      color,
-      tags: tags || [],
-      wordCount,
-    });
+  userId,
+  title: title || 'Untitled',
+  content,
+  color,
+  tags: tags || [],
+  pinned: pinned ?? false,
+  wordCount,
+});
 
     return note;
   } catch (err) {
@@ -54,6 +56,7 @@ async function getNoteById(noteId, userId) {
   }
 }
 
+   
 async function updateNote(noteId, userId, updates) {
   try {
     const note = await Note.findById(noteId);
@@ -66,11 +69,22 @@ async function updateNote(noteId, userId, updates) {
       throw new ApiError(403, 'You do not have permission to update this note.');
     }
 
+    // Only allow updating specific fields, exclude wordCount from client input
+    const allowedFields = ['title', 'content', 'color', 'tags', 'pinned'];
+    const updateData = {};
+
+    allowedFields.forEach((field) => {
+      if (updates[field] !== undefined) {
+        updateData[field] = updates[field];
+      }
+    });
+
+    // Recalculate wordCount only if content is being updated
     if (updates.content !== undefined) {
-      updates.wordCount = calculateWordCount(updates.content);
+      updateData.wordCount = calculateWordCount(updates.content);
     }
 
-    const updated = await Note.findByIdAndUpdate(noteId, updates, { new: true });
+    const updated = await Note.findByIdAndUpdate(noteId, updateData, { new: true });
     return updated;
   } catch (err) {
     if (err instanceof ApiError) throw err;
