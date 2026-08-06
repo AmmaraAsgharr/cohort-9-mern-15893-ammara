@@ -2,10 +2,12 @@ const express = require('express');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const cors = require('cors');
+//pino http 
 const pino = require('pino');
 const pinoHttp = require('pino-http');
 const errorHandler = require('./middleware/errorHandler');
 const authRoutes = require('./routes/auth.routes');
+const notesRoutes = require('./routes/notes.routes');
 
 dotenv.config();
 
@@ -36,18 +38,18 @@ app.get('/api/health', (req, res) => {
   res.json({ success: true, status: 'ok' });
 });
 
-// Auth routes
 app.use('/api/auth', authRoutes);
+app.use('/api/notes', notesRoutes);
 
 // 404 for unknown routes
 app.use((req, res) => {
   res.status(404).json({ success: false, message: 'Route not found.' });
 });
 
-// Error handling middleware — always last
+// Global error handler always last OK!
 app.use(errorHandler);
 
-// Database connection & Server startup function
+// Database connection & Server startup FUNCYION
 const startServer = async () => {
   if (!process.env.MONGO_URI) {
     logger.error('FATAL: MONGO_URI is not defined in environment variables');
