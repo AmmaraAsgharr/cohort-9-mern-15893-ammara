@@ -10,9 +10,13 @@ export function AuthProvider({ children }) {
     const savedToken = localStorage.getItem('token')
     const savedUser = localStorage.getItem('user')
     if (savedToken && savedUser) {
+      try{
       setToken(savedToken)
       setUser(JSON.parse(savedUser))
-    }
+    } catch(err){
+      localStorage.removeItem('token')
+      localStorage.removeItem('user')
+    }}
   }, [])
 
   const logout = () => {

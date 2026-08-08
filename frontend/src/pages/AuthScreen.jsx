@@ -84,45 +84,48 @@ export default function AuthScreen({ onLogin }) {
 
           <form onSubmit={handleSubmit}>
             {mode === 'signup' && (
-              <div className="auth-field auth-field-slide">
-                <label style={labelStyle}>Full Name</label>
-                <input 
-                  className="auth-input" 
-                  type="text" 
-                  value={name}
-                  onChange={e => setName(e.target.value)} 
-                  placeholder="Alex Rivera" 
+            <div className="auth-field auth-field-slide">
+                <label htmlFor="name" style={labelStyle}>Full Name</label>
+                 <input 
+                   id="name"
+                    className="auth-input" 
+                    type="text" 
+                    value={name}
+                     onChange={e => setName(e.target.value)} 
+                     placeholder="Ammara Asghar" 
                 />
-              </div>
-            )}
-            <div className="auth-field">
-              <label style={labelStyle}>Email</label>
-              <input 
-                className="auth-input" 
+             </div>
+  )}
+       <div className="auth-field">
+            <label htmlFor="email" style={labelStyle}>Email</label>
+             <input 
+              id="email"
+               className="auth-input" 
                 type="email" 
                 value={email}
-                onChange={e => setEmail(e.target.value)} 
-                placeholder="you@example.com" 
-              />
-            </div>
-            <div className="auth-field auth-field-last">
-              <label style={labelStyle}>Password</label>
-              <input 
-                className="auth-input" 
-                type="password" 
-                value={password}
-                onChange={e => setPassword(e.target.value)} 
-                placeholder="••••••••" 
-              />
-            </div>
+               onChange={e => setEmail(e.target.value)} 
+               placeholder="ammara@gmail.com" 
+          />
+        </div>
+        <div className="auth-field auth-field-last">
+           <label htmlFor="password" style={labelStyle}>Password</label>
+          <input 
+             id="password"
+             className="auth-input" 
+             type="password" 
+             value={password}
+             onChange={e => setPassword(e.target.value)} 
+             placeholder="••••••••" 
+            />
+           </div>
 
-            {err && (
-              <p className="auth-error">{err}</p>
-            )}
+             {err && (
+               <p className="auth-error" role="alert">{err}</p>
+              )}
 
-            <div className="auth-submit-wrapper">
+          <div className="auth-submit-wrapper">
               <SubmitButton loading={loading} label={mode === 'login' ? 'Log In' : 'Create Account'} />
-            </div>
+           </div>
           </form>
         </div>
       </div>

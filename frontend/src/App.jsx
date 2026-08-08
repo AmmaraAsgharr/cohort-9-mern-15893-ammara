@@ -5,7 +5,6 @@ function App() {
   const [user, setUser] = useState(null)
 
   const handleLogin = (userData) => {
-    console.log('Login successful, user data:', userData)
     setUser(userData)
   }
 
@@ -16,7 +15,7 @@ function App() {
   return (
     <div style={{ padding: 40 }}>
       <h1>Welcome, {user?.name || 'User'}!</h1>
-      <p>Dashboard coming soon...</p>
+      <p>Dashboard in pr 5 </p>
     </div>
   )
 }
