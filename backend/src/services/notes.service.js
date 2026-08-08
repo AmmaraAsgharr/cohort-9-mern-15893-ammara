@@ -6,14 +6,14 @@ function calculateWordCount(content) {
   return (content ?? '').trim().split(/\s+/).filter((word) => word.length > 0).length;
 }
 
-async function createNote({ userId, title, content, color, tags }) {
+async function createNote({ userId, title, content, color, tags ,pinned}) {
   try {
     const wordCount = calculateWordCount(content);
 
     const note = await Note.create({
   userId,
   title: title || 'Untitled',
-  content,
+  content : content ?? '',
   color,
   tags: tags || [],
   pinned: pinned ?? false,
