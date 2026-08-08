@@ -1,10 +1,12 @@
 import { useState } from 'react'
-import { login, signup } from '../api/authService'
+import { login as loginApi, signup } from '../api/authService'
+import { useAuth } from '../Context/AuthContext'
 import SubmitButton from '../components/SubmitButton'
 import { labelStyle } from '../constants/styles'
 import '../styles/auth.css'
 
-export default function AuthScreen({ onLogin }) {
+export default function AuthScreen() {
+  const { login } = useAuth()
   const [mode, setMode] = useState('login')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -21,17 +23,16 @@ export default function AuthScreen({ onLogin }) {
     setErr('')
     setLoading(true)
     try {
-      const { user } = mode === 'login'
-        ? await login(email, password)
+      const { user, token } = mode === 'login'
+        ? await loginApi(email, password)
         : await signup(name, email, password)
-      onLogin(user)
+      login(user, token)
     } catch (e) {
       setErr(e?.response?.data?.message || 'Something went wrong. Please try again.')
     } finally {
       setLoading(false)
     }
   }
-
   return (
     <div className="auth-container">
       {/* ── Left brand panel ── */}

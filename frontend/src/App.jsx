@@ -1,21 +1,17 @@
-import { useState } from 'react'
+import { useAuth } from './Context/AuthContext'
 import AuthScreen from './pages/AuthScreen'
 
 function App() {
-  const [user, setUser] = useState(null)
-
-  const handleLogin = (userData) => {
-    setUser(userData)
-  }
+  const { user } = useAuth()
 
   if (!user) {
-    return <AuthScreen onLogin={handleLogin} />
+    return <AuthScreen />
   }
 
   return (
     <div style={{ padding: 40 }}>
       <h1>Welcome, {user?.name || 'User'}!</h1>
-      <p>Dashboard in pr 5 </p>
+      <p>Dashboard coming soon...</p>
     </div>
   )
 }

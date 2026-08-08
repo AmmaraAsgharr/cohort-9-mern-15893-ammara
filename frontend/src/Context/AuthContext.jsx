@@ -10,14 +10,22 @@ export function AuthProvider({ children }) {
     const savedToken = localStorage.getItem('token')
     const savedUser = localStorage.getItem('user')
     if (savedToken && savedUser) {
-      try{
-      setToken(savedToken)
-      setUser(JSON.parse(savedUser))
-    } catch(err){
-      localStorage.removeItem('token')
-      localStorage.removeItem('user')
-    }}
+      try {
+        setToken(savedToken)
+        setUser(JSON.parse(savedUser))
+      } catch (err) {
+        localStorage.removeItem('token')
+        localStorage.removeItem('user')
+      }
+    }
   }, [])
+
+  const login = (userData, authToken) => {
+    localStorage.setItem('token', authToken)
+    localStorage.setItem('user', JSON.stringify(userData))
+    setUser(userData)
+    setToken(authToken)
+  }
 
   const logout = () => {
     localStorage.removeItem('token')
@@ -27,7 +35,7 @@ export function AuthProvider({ children }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, token, logout }}>
+    <AuthContext.Provider value={{ user, token, login, logout }}>
       {children}
     </AuthContext.Provider>
   )
