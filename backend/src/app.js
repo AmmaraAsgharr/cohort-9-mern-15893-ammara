@@ -49,6 +49,8 @@ app.use((req, res) => {
 // Global error handler always last OK!
 app.use(errorHandler);
 
+module.exports = app;
+
 // Database connection & Server startup FUNCYION
 const startServer = async () => {
   if (!process.env.MONGO_URI) {
