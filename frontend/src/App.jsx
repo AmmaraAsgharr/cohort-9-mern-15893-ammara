@@ -8,62 +8,63 @@ function App() {
   const { user } = useAuth()
   const [notes, setNotes] = useState([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
+  const [loadError, setLoadError] = useState('')
+  const [actionMessage, setActionMessage] = useState('')
 
- useEffect(() => {
-  if (!user) {
-    setNotes([])
-    return
-  }
+  useEffect(() => {
+    if (!user) {
+      setNotes([])
+      return
+    }
 
-  let isCurrent = true
+    let isCurrent = true
 
-  const fetchNotes = async () => {
-    setLoading(true)
-    setError('')
-    try {
-      const data = await getNotes()
-      if (isCurrent) {
-        setNotes(data)
-      }
-    } catch (err) {
-      if (isCurrent) {
-        setError('Failed to load notes. Please try again.')
-      }
-    } finally {
-      if (isCurrent) {
-        setLoading(false)
+    const fetchNotes = async () => {
+      setLoading(true)
+      setLoadError('')
+      try {
+        const data = await getNotes()
+        if (isCurrent) {
+          setNotes(data)
+        }
+      } catch (err) {
+        if (isCurrent) {
+          setLoadError('Failed to load notes. Please try again.')
+        }
+      } finally {
+        if (isCurrent) {
+          setLoading(false)
+        }
       }
     }
-  }
 
-  fetchNotes()
+    fetchNotes()
 
-  return () => {
-    isCurrent = false
-  }
-}, [user])
+    return () => {
+      isCurrent = false
+    }
+  }, [user])
+
   const handleDeleteNote = async (id) => {
     try {
       await deleteNoteApi(id)
       setNotes(prev => prev.filter(n => n._id !== id))
     } catch (err) {
-      setError('Failed to delete note.')
+      setActionMessage('Failed to delete note.')
     }
   }
 
-  //this section is going to implement in next pr
+  // this section is going to implement in next PR
   const handleNewNote = () => {
-    setError('Note creation is coming soon.')
+    setActionMessage('Note creation is coming soon.')
   }
 
-  
   const handleEditNote = () => {
-    setError('Note editing is coming soon.')
+    setActionMessage('Note editing is coming soon.')
   }
 
   const handleNavigate = () => {
-    setError('This section is coming soon.')
+    setActionMessage('This section is coming soon.')
   }
 
   if (!user) {
@@ -75,7 +76,8 @@ function App() {
       user={user}
       notes={notes}
       loading={loading}
-      error={error}
+      error={loadError}
+      actionMessage={actionMessage}
       onNewNote={handleNewNote}
       onEditNote={handleEditNote}
       onDeleteNote={handleDeleteNote}

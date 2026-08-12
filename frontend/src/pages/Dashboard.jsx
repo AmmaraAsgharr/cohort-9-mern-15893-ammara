@@ -7,7 +7,7 @@ import EmptyState from '../components/EmptyState'
 import '../styles/dashboard.css'
 
 export default function Dashboard({
-  user, notes, loading, error, onNewNote, onEditNote, onDeleteNote, onNavigate,
+  user, notes, loading, error, actionMessage, onNewNote, onEditNote, onDeleteNote, onNavigate,
 }) {
   const [search, setSearch] = useState('')
   const [activeTag, setActiveTag] = useState(null)
@@ -95,6 +95,10 @@ export default function Dashboard({
       </div>
 
       <main className="dashboard-main">
+        {actionMessage && (
+          <p className="dashboard-status-text dashboard-action-text">{actionMessage}</p>
+        )}
+
         {loading && (
           <p className="dashboard-status-text">Loading your notes...</p>
         )}

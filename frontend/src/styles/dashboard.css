@@ -189,7 +189,9 @@
 .dashboard-error-text {
   color: #FF4444;
 }
-
+.dashboard-action-text {
+  color: #FF6B00;
+}
 .dashboard-section {
   margin-bottom: 36px;
 }
