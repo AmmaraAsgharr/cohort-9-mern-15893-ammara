@@ -47,6 +47,7 @@ export default function Dashboard({
           <button
             onClick={() => onNavigate('profile')}
             className="dashboard-avatar-btn"
+            aria-label="View profile"
           >
             {user.avatar}
           </button>
@@ -73,7 +74,9 @@ export default function Dashboard({
         </div>
 
         <div className="dashboard-view-controls">
+          <label htmlFor="sort-select" className="sr-only">Sort notes by</label>
           <select
+            id="sort-select"
             value={sortBy}
             onChange={e => setSortBy(e.target.value)}
             className="dashboard-sort-select"
@@ -87,6 +90,8 @@ export default function Dashboard({
               key={v}
               onClick={() => setView(v)}
               className={`dashboard-view-btn ${view === v ? 'active' : ''}`}
+              aria-label={v === 'grid' ? 'Grid view' : 'List view'}
+              aria-pressed={view === v}
             >
               {v === 'grid' ? '⊞' : '☰'}
             </button>
