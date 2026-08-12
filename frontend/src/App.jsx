@@ -10,24 +10,39 @@ function App() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
-  useEffect(() => {
-    if (!user) return
-    fetchNotes()
-  }, [user])
+ useEffect(() => {
+  if (!user) {
+    setNotes([])
+    return
+  }
+
+  let isCurrent = true
 
   const fetchNotes = async () => {
     setLoading(true)
     setError('')
     try {
       const data = await getNotes()
-      setNotes(data)
+      if (isCurrent) {
+        setNotes(data)
+      }
     } catch (err) {
-      setError('Failed to load notes. Please try again.')
+      if (isCurrent) {
+        setError('Failed to load notes. Please try again.')
+      }
     } finally {
-      setLoading(false)
+      if (isCurrent) {
+        setLoading(false)
+      }
     }
   }
 
+  fetchNotes()
+
+  return () => {
+    isCurrent = false
+  }
+}, [user])
   const handleDeleteNote = async (id) => {
     try {
       await deleteNoteApi(id)
