@@ -12,8 +12,18 @@ export default function NoteCard({ note, view, onEdit, onDelete, isConfirmingDel
   const plainText = note.content.replace(/<[^>]*>/g, '')
   const preview = plainText.length > 140 ? plainText.slice(0, 140) + '…' : plainText
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      onEdit()
+    }
+  }
+
   return (
     <div
+      role="button"
+      tabIndex={0}
+      aria-label={`Edit note: ${note.title || 'Untitled'}`}
       style={{
         backgroundColor: bgColor,
         borderRadius: 14,
@@ -28,6 +38,7 @@ export default function NoteCard({ note, view, onEdit, onDelete, isConfirmingDel
         position: 'relative',
       }}
       onClick={onEdit}
+      onKeyDown={handleKeyDown}
       onMouseEnter={e => {
         e.currentTarget.style.transform = 'translateY(-2px)'
         e.currentTarget.style.boxShadow = '0 8px 20px rgba(0,0,0,0.08)'
@@ -97,7 +108,7 @@ export default function NoteCard({ note, view, onEdit, onDelete, isConfirmingDel
       <div
         style={{
           display: 'flex',
-          flexDirection: view === 'list' ? 'row' : 'row',
+          flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'space-between',
           gap: 8,
@@ -151,6 +162,7 @@ export default function NoteCard({ note, view, onEdit, onDelete, isConfirmingDel
         ) : (
           <button
             onClick={e => { e.stopPropagation(); onDelete() }}
+            aria-label={`Delete note: ${note.title || 'Untitled'}`}
             style={{
               fontSize: '0.8rem',
               color: '#11111150',

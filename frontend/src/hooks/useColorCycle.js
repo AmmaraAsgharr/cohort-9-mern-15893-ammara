@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 
 const COLORS = ['#FF6B00', '#FFB830', '#FF4444', '#FF6B00']
 
@@ -21,6 +21,12 @@ export function useColorCycle(baseColor = '#FF6B00') {
     indexRef.current = 0
     setBg(baseColor)
   }
+
+  useEffect(() => {
+    return () => {
+      clearInterval(intervalRef.current)
+    }
+  }, [])
 
   return { bg, start, stop }
 }
