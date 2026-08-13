@@ -1,0 +1,292 @@
+/* UserProfile.css */
+
+/* Main Container */
+.user-profile {
+  min-height: 100vh;
+  background-color: #f8f8f8;
+}
+
+/* Header */
+.profile-header {
+  background-color: #111;
+  height: 62px;
+  padding: 0 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.back-button {
+  background: none;
+  border: 1.5px solid #ffffff30;
+  border-radius: 10px;
+  color: #fff;
+  padding: 7px 16px;
+  cursor: pointer;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  transition: all 0.18s;
+}
+
+.back-button:hover {
+  border-color: #fff;
+  background-color: #ffffff12;
+}
+
+.profile-title {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #FF6B00;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.header-placeholder {
+  width: 90px;
+}
+
+/* Main Content */
+.profile-main {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 40px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Profile Card */
+.profile-card {
+  background-color: #fff;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  border: 1px solid #f0f0f0;
+}
+
+.profile-card-cover {
+  height: 110px;
+  background: linear-gradient(135deg, #111 0%, #2a1800 50%, #FF6B00 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.profile-card-cover-pattern {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 14px 14px;
+}
+
+.profile-card-content {
+  padding: 0 28px 28px;
+}
+
+/* Avatar */
+.profile-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 3px solid #fff;
+  outline: 2px solid #f0f0f0;
+  margin-top: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Unbounded', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 900;
+  color: #fff;
+  cursor: default;
+  transition: background-color 0.08s;
+  user-select: none;
+}
+
+/* User Info */
+.profile-user-info {
+  margin-top: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.profile-user-details {
+  flex: 1;
+}
+
+.profile-user-name {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 900;
+  color: #111;
+  margin-bottom: 4px;
+}
+
+.profile-user-email {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: #11111170;
+}
+
+/* Logout Button */
+.logout-button {
+  padding: 10px 22px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-family: 'Unbounded', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: background-color 0.08s, box-shadow 0.2s;
+}
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+  gap: 14px;
+}
+
+.stat-card {
+  background-color: #fff;
+  border: 1.5px solid;
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  animation: noteCardIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.stat-icon {
+  font-size: 1.4rem;
+  margin-bottom: 10px;
+}
+
+.stat-value {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 900;
+  color: #111;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  color: #11111170;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* Top Tags Card */
+.top-tags-card {
+  background-color: #fff;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f0f0f0;
+}
+
+.top-tags-title {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.top-tags-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #FF6B00;
+  display: inline-block;
+}
+
+.top-tags-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Tag Item */
+.tag-item {
+  width: 100%;
+}
+
+.tag-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: #111;
+}
+
+.tag-count {
+  color: #11111160;
+}
+
+.tag-bar-track {
+  height: 7px;
+  background-color: #f0f0f0;
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.tag-bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Animations */
+@keyframes noteCardIn {
+  0% {
+    opacity: 0;
+    transform: translateY(16px) scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .profile-header {
+    padding: 0 16px;
+  }
+  
+  .profile-main {
+    padding: 24px 16px;
+  }
+  
+  .profile-card-content {
+    padding: 0 16px 16px;
+  }
+  
+  .profile-user-info {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  
+  .stat-card {
+    padding: 16px;
+  }
+}

@@ -1,15 +1,22 @@
 const COLOR_MAP = {
-  '#FFA500': '#FFF4E5',
-  '#FF69B4': '#FFE8F3',
-  '#00CED1': '#E5FBFB',
-  '#87CEEB': '#E8F6FD',
-  '#DDA0DD': '#F7E8F7',
-  '#8B4513': '#F0E4DA',
+  '#FF6B00': '#FFDDD0',
+  '#FFB830': '#FFEEC2',
+  '#34C77B': '#CDF5E1',
+  '#38AAFF': '#CDEBFB',
+  '#8B5CF6': '#E3D6FA',
+  '#FF4444': '#FFCDE7',
 }
 
 export default function NoteCard({ note, view, onEdit, onDelete, isConfirmingDelete, onCancelDelete, onConfirmDelete }) {
   const bgColor = COLOR_MAP[note.color] || '#f5f5f5'
-  const plainText = note.content.replace(/<[^>]*>/g, '')
+  const plainText = note.content
+  .replace(/<[^>]*>/g, '')
+  .replace(/&nbsp;/g, ' ')
+  .replace(/&amp;/g, '&')
+  .replace(/&lt;/g, '<')
+  .replace(/&gt;/g, '>')
+  .replace(/&quot;/g, '"')
+  .replace(/&#39;/g, "'")
   const preview = plainText.length > 140 ? plainText.slice(0, 140) + '…' : plainText
 
   const handleKeyDown = (e) => {
@@ -71,7 +78,7 @@ export default function NoteCard({ note, view, onEdit, onDelete, isConfirmingDel
           style={{
             fontFamily: 'DM Sans, sans-serif',
             fontSize: '0.8rem',
-            color: '#11111190',
+            color: '#111111d0',
             lineHeight: 1.5,
             margin: 0,
             marginBottom: 12,
@@ -160,20 +167,36 @@ export default function NoteCard({ note, view, onEdit, onDelete, isConfirmingDel
             </button>
           </div>
         ) : (
-          <button
-            onClick={e => { e.stopPropagation(); onDelete() }}
-            aria-label={`Delete note: ${note.title || 'Untitled'}`}
-            style={{
-              fontSize: '0.8rem',
-              color: '#11111150',
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              padding: 4,
-            }}
-          >
-            🗑
-          </button>
+          <div style={{ display: 'flex', gap: 4 }}>
+            <button
+              onClick={e => { e.stopPropagation(); onEdit() }}
+              aria-label={`Edit note: ${note.title || 'Untitled'}`}
+              style={{
+                fontSize: '0.8rem',
+                color: '#111111a0',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                padding: 4,
+              }}
+            >
+              ✏️
+            </button>
+            <button
+              onClick={e => { e.stopPropagation(); onDelete() }}
+              aria-label={`Delete note: ${note.title || 'Untitled'}`}
+              style={{
+                fontSize: '0.8rem',
+                color: '#111111a0',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                padding: 4,
+              }}
+            >
+              🗑
+            </button>
+          </div>
         )}
       </div>
     </div>

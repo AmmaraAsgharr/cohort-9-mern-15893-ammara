@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
-
-const NOTE_COLORS = ['#FFA500', '#FF69B4', '#00CED1', '#87CEEB', '#DDA0DD', '#8B4513'];
+const NOTE_COLORS = ['#FF6B00', '#FFB830', '#34C77B', '#38AAFF', '#8B5CF6', '#FF4444'];
 
 const noteSchema = new mongoose.Schema(
   {

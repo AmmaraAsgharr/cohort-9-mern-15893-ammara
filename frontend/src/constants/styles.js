@@ -8,3 +8,12 @@ export const labelStyle = {
   textTransform: 'uppercase',
   letterSpacing: '0.03em',
 }
+
+export const microLabel = {
+  fontFamily: 'JetBrains Mono, monospace',
+  fontSize: '0.6rem',
+  fontWeight: 700,
+  letterSpacing: '0.08em',
+  textTransform: 'uppercase',
+  color: '#11111160',
+}
