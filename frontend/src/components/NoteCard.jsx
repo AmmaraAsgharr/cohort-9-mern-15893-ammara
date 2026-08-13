@@ -19,8 +19,18 @@ export default function NoteCard({ note, view, onEdit, onDelete, isConfirmingDel
   .replace(/&#39;/g, "'")
   const preview = plainText.length > 140 ? plainText.slice(0, 140) + '…' : plainText
 
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter' || e.key === ' ') {
+  // Handle card click - only trigger edit if clicking on card, not on buttons
+  const handleCardClick = (e) => {
+    // Check if the click target is a button or inside a button
+    if (!e.target.closest('button')) {
+      onEdit()
+    }
+  }
+
+  // Handle keyboard events on card
+  const handleCardKeyDown = (e) => {
+    // Only trigger edit if Enter/Space is pressed on the card itself, not on buttons
+    if ((e.key === 'Enter' || e.key === ' ') && !e.target.closest('button')) {
       e.preventDefault()
       onEdit()
     }
@@ -44,8 +54,8 @@ export default function NoteCard({ note, view, onEdit, onDelete, isConfirmingDel
         transition: 'transform 0.15s, box-shadow 0.15s',
         position: 'relative',
       }}
-      onClick={onEdit}
-      onKeyDown={handleKeyDown}
+      onClick={handleCardClick}
+      onKeyDown={handleCardKeyDown}
       onMouseEnter={e => {
         e.currentTarget.style.transform = 'translateY(-2px)'
         e.currentTarget.style.boxShadow = '0 8px 20px rgba(0,0,0,0.08)'
@@ -132,9 +142,13 @@ export default function NoteCard({ note, view, onEdit, onDelete, isConfirmingDel
         </span>
 
         {isConfirmingDelete ? (
-          <div style={{ display: 'flex', gap: 6 }} onClick={e => e.stopPropagation()}>
+          <div style={{ display: 'flex', gap: 6 }}>
             <button
-              onClick={onConfirmDelete}
+              onClick={(e) => {
+                e.stopPropagation()
+                onConfirmDelete()
+              }}
+              onKeyDown={(e) => e.stopPropagation()}
               style={{
                 fontSize: '0.65rem',
                 fontFamily: 'DM Sans, sans-serif',
@@ -150,7 +164,11 @@ export default function NoteCard({ note, view, onEdit, onDelete, isConfirmingDel
               Confirm
             </button>
             <button
-              onClick={onCancelDelete}
+              onClick={(e) => {
+                e.stopPropagation()
+                onCancelDelete()
+              }}
+              onKeyDown={(e) => e.stopPropagation()}
               style={{
                 fontSize: '0.65rem',
                 fontFamily: 'DM Sans, sans-serif',
@@ -169,7 +187,11 @@ export default function NoteCard({ note, view, onEdit, onDelete, isConfirmingDel
         ) : (
           <div style={{ display: 'flex', gap: 4 }}>
             <button
-              onClick={e => { e.stopPropagation(); onEdit() }}
+              onClick={(e) => {
+                e.stopPropagation()
+                onEdit()
+              }}
+              onKeyDown={(e) => e.stopPropagation()}
               aria-label={`Edit note: ${note.title || 'Untitled'}`}
               style={{
                 fontSize: '0.8rem',
@@ -183,7 +205,11 @@ export default function NoteCard({ note, view, onEdit, onDelete, isConfirmingDel
               ✏️
             </button>
             <button
-              onClick={e => { e.stopPropagation(); onDelete() }}
+              onClick={(e) => {
+                e.stopPropagation()
+                onDelete()
+              }}
+              onKeyDown={(e) => e.stopPropagation()}
               aria-label={`Delete note: ${note.title || 'Untitled'}`}
               style={{
                 fontSize: '0.8rem',
