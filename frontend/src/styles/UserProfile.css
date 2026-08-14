@@ -37,7 +37,7 @@
 }
 
 .profile-title {
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-size: 0.8rem;
   font-weight: 700;
   color: #FF6B00;
@@ -97,7 +97,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-size: 1.2rem;
   font-weight: 900;
   color: #fff;
@@ -121,7 +121,7 @@
 }
 
 .profile-user-name {
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-size: 1.2rem;
   font-weight: 900;
   color: #111;
@@ -140,7 +140,7 @@
   border: none;
   border-radius: 12px;
   cursor: pointer;
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.05em;
@@ -161,7 +161,7 @@
   border-radius: 18px;
   padding: 20px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
-  animation: noteCardIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: note-card-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .stat-icon {
@@ -170,7 +170,7 @@
 }
 
 .stat-value {
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-size: 1.2rem;
   font-weight: 900;
   color: #111;
@@ -195,7 +195,7 @@
 }
 
 .top-tags-title {
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-size: 0.82rem;
   font-weight: 700;
   color: #111;
@@ -251,7 +251,7 @@
 }
 
 /* Animations */
-@keyframes noteCardIn {
+@keyframes note-card-in {
   0% {
     opacity: 0;
     transform: translateY(16px) scale(0.96);

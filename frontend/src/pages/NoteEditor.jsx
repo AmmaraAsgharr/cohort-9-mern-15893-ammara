@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import DOMPurify from 'dompurify';
 import { NOTE_COLORS, TAGS } from '../constants';
 import { microLabel } from '../constants/styles';
 import { useColorCycle } from '../hooks/useColorCycle';
@@ -27,8 +28,11 @@ export default function NoteEditor({ note, onSave, onCancel }) {
   const c = NOTE_COLORS.find(x => x.id === color);
 
   useEffect(() => {
+    // Sanitize before injecting: note.content comes from storage and could
+    // contain malicious HTML (script/onerror attrs) if it ever bypassed
+    // server-side checks. Never assign raw stored HTML to innerHTML.
     if (editorRef.current && note?.content) {
-      editorRef.current.innerHTML = note.content;
+      editorRef.current.innerHTML = DOMPurify.sanitize(note.content);
     }
   }, []);
 
@@ -38,7 +42,8 @@ export default function NoteEditor({ note, onSave, onCancel }) {
   };
 
   const handleSave = async () => {
-    const content = editorRef.current?.innerHTML || '';
+    // Sanitize what we're about to persist too (defense in depth).
+    const content = DOMPurify.sanitize(editorRef.current?.innerHTML || '');
     setSaving(true);
     // Clear previous error
     setSaveError(''); 
@@ -92,6 +97,8 @@ export default function NoteEditor({ note, onSave, onCancel }) {
           <button
             onClick={() => setPinned(p => !p)}
             className={`pin-button ${pinned ? 'pinned' : ''}`}
+            aria-label={pinned ? 'Unpin note' : 'Pin note'}
+            aria-pressed={pinned}
           >
             {pinned ? '📌' : '📍'}
           </button>
@@ -135,12 +142,13 @@ export default function NoteEditor({ note, onSave, onCancel }) {
           <FmtBtn key={cmd} onClick={() => format(cmd)}>{icon}</FmtBtn>
         ))}
         <Divider />
-        {['#FF6B00', '#FFB830', '#34C77B', '#38AAFF', '#8B5CF6', '#FF4444'].map(clr => (
+        {NOTE_COLORS.map(nc => (
           <button
-            key={clr}
-            onClick={() => format('foreColor', clr)}
+            key={nc.border}
+            onClick={() => format('foreColor', nc.border)}
             className="color-dot"
-            style={{ backgroundColor: clr }}
+            aria-label={`Set text color to ${nc.label}`}
+            style={{ backgroundColor: nc.border }}
             onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.35)'}
             onMouseLeave={e => e.currentTarget.style.transform = ''}
           />
@@ -174,6 +182,8 @@ export default function NoteEditor({ note, onSave, onCancel }) {
                 key={nc.id}
                 onClick={() => setColor(nc.id)}
                 title={nc.label}
+                aria-label={`Set note color to ${nc.label}`}
+                aria-pressed={color === nc.id}
                 className={`color-option ${color === nc.id ? 'active' : ''}`}
                 style={{
                   backgroundColor: nc.bg,
@@ -195,6 +205,7 @@ export default function NoteEditor({ note, onSave, onCancel }) {
                   key={tag}
                   onClick={() => setTags(p => on ? p.filter(t => t !== tag) : [...p, tag])}
                   className={`tag-button ${on ? 'active' : ''}`}
+                  aria-pressed={on}
                   style={{
                     borderColor: on ? c.border : '#11111130',
                     backgroundColor: on ? c.border + '20' : 'transparent',
