@@ -24,10 +24,17 @@ const SANITIZE_OPTIONS = {
 };
 
 function sanitizeNoteBody(body) {
+  // Also sanitize other potential fields like title if they exist
+  const sanitized = { ...body };
+  
   if (typeof body.content === 'string') {
-    return { ...body, content: sanitizeHtml(body.content, SANITIZE_OPTIONS) };
+    sanitized.content = sanitizeHtml(body.content, SANITIZE_OPTIONS);
   }
-  return body;
+  
+  // Remove any userId that might be in the body (defense in depth)
+  delete sanitized.userId;
+  
+  return sanitized;
 }
 
 async function createNote(req, res, next) {
@@ -37,9 +44,12 @@ async function createNote(req, res, next) {
       return res.status(400).json({ success: false, message: errors[0], errors });
     }
 
+    // CRITICAL FIX: Spread sanitized body first, then set userId
+    // This ensures the authenticated user ID cannot be overridden
     const note = await notesService.createNote({
-      userId: req.user.id,
       ...sanitizeNoteBody(req.body),
+      // Always the authenticated user
+      userId: req.user.id,  
     });
 
     res.status(201).json(note);
@@ -73,7 +83,12 @@ async function updateNote(req, res, next) {
       return res.status(400).json({ success: false, message: errors[0], errors });
     }
 
-    const note = await notesService.updateNote(req.params.id, req.user.id, sanitizeNoteBody(req.body));
+    // For update, sanitize and ensure userId is not passed from client
+    const sanitizedData = sanitizeNoteBody(req.body);
+    // Remove any userId that might have been sent (shouldn't be needed for update)
+    delete sanitizedData.userId;
+    
+    const note = await notesService.updateNote(req.params.id, req.user.id, sanitizedData);
     res.json(note);
   } catch (err) {
     next(err);

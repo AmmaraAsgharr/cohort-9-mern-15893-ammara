@@ -140,7 +140,7 @@
 
 /* Title Input */
 .note-title-input {
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-size: clamp(1.3rem, 3.5vw, 1.9rem);
   font-weight: 900;
   color: #111;
