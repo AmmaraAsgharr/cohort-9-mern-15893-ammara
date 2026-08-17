@@ -1,19 +1,36 @@
 const COLOR_MAP = {
-  '#FFA500': '#FFF4E5',
-  '#FF69B4': '#FFE8F3',
-  '#00CED1': '#E5FBFB',
-  '#87CEEB': '#E8F6FD',
-  '#DDA0DD': '#F7E8F7',
-  '#8B4513': '#F0E4DA',
+  '#FF6B00': '#FFDDD0',
+  '#FFB830': '#FFEEC2',
+  '#34C77B': '#CDF5E1',
+  '#38AAFF': '#CDEBFB',
+  '#8B5CF6': '#E3D6FA',
+  '#FF4444': '#FFCDE7',
 }
 
 export default function NoteCard({ note, view, onEdit, onDelete, isConfirmingDelete, onCancelDelete, onConfirmDelete }) {
   const bgColor = COLOR_MAP[note.color] || '#f5f5f5'
-  const plainText = note.content.replace(/<[^>]*>/g, '')
+  const plainText = note.content
+  .replace(/<[^>]*>/g, '')
+  .replace(/&nbsp;/g, ' ')
+  .replace(/&amp;/g, '&')
+  .replace(/&lt;/g, '<')
+  .replace(/&gt;/g, '>')
+  .replace(/&quot;/g, '"')
+  .replace(/&#39;/g, "'")
   const preview = plainText.length > 140 ? plainText.slice(0, 140) + '…' : plainText
 
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter' || e.key === ' ') {
+  // Handle card click - only trigger edit if clicking on card, not on buttons
+  const handleCardClick = (e) => {
+    // Check if the click target is a button or inside a button
+    if (!e.target.closest('button')) {
+      onEdit()
+    }
+  }
+
+  // Handle keyboard events on card
+  const handleCardKeyDown = (e) => {
+    // Only trigger edit if Enter/Space is pressed on the card itself, not on buttons
+    if ((e.key === 'Enter' || e.key === ' ') && !e.target.closest('button')) {
       e.preventDefault()
       onEdit()
     }
@@ -37,8 +54,8 @@ export default function NoteCard({ note, view, onEdit, onDelete, isConfirmingDel
         transition: 'transform 0.15s, box-shadow 0.15s',
         position: 'relative',
       }}
-      onClick={onEdit}
-      onKeyDown={handleKeyDown}
+      onClick={handleCardClick}
+      onKeyDown={handleCardKeyDown}
       onMouseEnter={e => {
         e.currentTarget.style.transform = 'translateY(-2px)'
         e.currentTarget.style.boxShadow = '0 8px 20px rgba(0,0,0,0.08)'
@@ -71,7 +88,7 @@ export default function NoteCard({ note, view, onEdit, onDelete, isConfirmingDel
           style={{
             fontFamily: 'DM Sans, sans-serif',
             fontSize: '0.8rem',
-            color: '#11111190',
+            color: '#111111d0',
             lineHeight: 1.5,
             margin: 0,
             marginBottom: 12,
@@ -125,9 +142,13 @@ export default function NoteCard({ note, view, onEdit, onDelete, isConfirmingDel
         </span>
 
         {isConfirmingDelete ? (
-          <div style={{ display: 'flex', gap: 6 }} onClick={e => e.stopPropagation()}>
+          <div style={{ display: 'flex', gap: 6 }}>
             <button
-              onClick={onConfirmDelete}
+              onClick={(e) => {
+                e.stopPropagation()
+                onConfirmDelete()
+              }}
+              onKeyDown={(e) => e.stopPropagation()}
               style={{
                 fontSize: '0.65rem',
                 fontFamily: 'DM Sans, sans-serif',
@@ -143,7 +164,11 @@ export default function NoteCard({ note, view, onEdit, onDelete, isConfirmingDel
               Confirm
             </button>
             <button
-              onClick={onCancelDelete}
+              onClick={(e) => {
+                e.stopPropagation()
+                onCancelDelete()
+              }}
+              onKeyDown={(e) => e.stopPropagation()}
               style={{
                 fontSize: '0.65rem',
                 fontFamily: 'DM Sans, sans-serif',
@@ -160,20 +185,44 @@ export default function NoteCard({ note, view, onEdit, onDelete, isConfirmingDel
             </button>
           </div>
         ) : (
-          <button
-            onClick={e => { e.stopPropagation(); onDelete() }}
-            aria-label={`Delete note: ${note.title || 'Untitled'}`}
-            style={{
-              fontSize: '0.8rem',
-              color: '#11111150',
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              padding: 4,
-            }}
-          >
-            🗑
-          </button>
+          <div style={{ display: 'flex', gap: 4 }}>
+            <button
+              onClick={(e) => {
+                e.stopPropagation()
+                onEdit()
+              }}
+              onKeyDown={(e) => e.stopPropagation()}
+              aria-label={`Edit note: ${note.title || 'Untitled'}`}
+              style={{
+                fontSize: '0.8rem',
+                color: '#111111a0',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                padding: 4,
+              }}
+            >
+              ✏️
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation()
+                onDelete()
+              }}
+              onKeyDown={(e) => e.stopPropagation()}
+              aria-label={`Delete note: ${note.title || 'Untitled'}`}
+              style={{
+                fontSize: '0.8rem',
+                color: '#111111a0',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                padding: 4,
+              }}
+            >
+              🗑
+            </button>
+          </div>
         )}
       </div>
     </div>

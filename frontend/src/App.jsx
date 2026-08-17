@@ -2,14 +2,18 @@ import { useState, useEffect } from 'react'
 import { useAuth } from './Context/AuthContext'
 import AuthScreen from './pages/AuthScreen'
 import Dashboard from './pages/Dashboard'
-import { getNotes, deleteNote as deleteNoteApi } from './api/notesService'
+import NoteEditor from './pages/NoteEditor'
+import UserProfile from './pages/UserProfile'
+import { getNotes, createNote, updateNote, deleteNote as deleteNoteApi } from './api/notesService'
 
 function App() {
-  const { user } = useAuth()
+  const { user, logout } = useAuth()
   const [notes, setNotes] = useState([])
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState('')
   const [actionMessage, setActionMessage] = useState('')
+  const [screen, setScreen] = useState('dashboard')
+  const [activeNote, setActiveNote] = useState(null)
 
   useEffect(() => {
     if (!user) {
@@ -54,21 +58,68 @@ function App() {
     }
   }
 
-  // this section is going to implement in next PR
   const handleNewNote = () => {
-    setActionMessage('Note creation is coming soon.')
+    setActiveNote(null)
+    setScreen('editor')
   }
 
-  const handleEditNote = () => {
-    setActionMessage('Note editing is coming soon.')
+  const handleEditNote = (note) => {
+    setActiveNote({ ...note, id: note._id })
+    setScreen('editor')
   }
 
-  const handleNavigate = () => {
-    setActionMessage('This section is coming soon.')
+  const handleSaveNote = async (noteData) => {
+    try {
+      if (noteData.id) {
+        const updated = await updateNote(noteData.id, noteData)
+        setNotes(prev => prev.map(n => (n._id === noteData.id ? updated : n)))
+      } else {
+        const created = await createNote(noteData)
+        setNotes(prev => [created, ...prev])
+      }
+      setScreen('dashboard')
+    } catch (err) {
+      setActionMessage('Failed to save note.')
+      throw err
+    }
+  }
+
+  const handleCancelEdit = () => {
+    setActiveNote(null)
+    setScreen('dashboard')
+  }
+
+  const handleNavigate = (target) => {
+    setScreen(target)
+  }
+
+  const handleBackToDashboard = () => {
+    setScreen('dashboard')
   }
 
   if (!user) {
     return <AuthScreen />
+  }
+
+  if (screen === 'editor') {
+    return (
+      <NoteEditor
+        note={activeNote}
+        onSave={handleSaveNote}
+        onCancel={handleCancelEdit}
+      />
+    )
+  }
+
+  if (screen === 'profile') {
+    return (
+      <UserProfile
+        user={user}
+        notes={notes}
+        onLogout={logout}
+        onBack={handleBackToDashboard}
+      />
+    )
   }
 
   return (
