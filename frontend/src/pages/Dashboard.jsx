@@ -4,18 +4,8 @@ import FilterChip from '../components/FilterChip'
 import SectionLabel from '../components/SectionLabel'
 import NoteGrid from '../components/NoteGrid'
 import EmptyState from '../components/EmptyState'
+import { extractPlainText } from '../utils/html' 
 import '../styles/dashboard.css'
-
-function stripTags(html) {
-  let out = ''
-  let inTag = false
-  for (const c of html) {
-    if (c === '<') inTag = true
-    else if (c === '>') inTag = false
-    else if (!inTag) out += c
-  }
-  return out
-}
 
 export default function Dashboard({
   user, notes, loading, error, actionMessage, onNewNote, onEditNote, onDeleteNote, onNavigate,
@@ -26,16 +16,14 @@ export default function Dashboard({
   const [view, setView] = useState('grid')
   const [deleteConfirm, setDeleteConfirm] = useState(null)
 
-  // ---- Pre‑compute stripped and lowercased content for each note ----
   const searchableNotes = useMemo(
     () => notes.map(n => ({
       ...n,
-      _plainContent: stripTags(n.content).toLowerCase(),
+      _plainContent: extractPlainText(n.content).toLowerCase(),
     })),
     [notes]
   )
 
-  // ---- Filter using pre‑computed content ----
   const filtered = searchableNotes
     .filter(n => {
       const q = search.toLowerCase()

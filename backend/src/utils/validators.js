@@ -1,4 +1,4 @@
-const EMAIL_RE = /^[^\s@.]+@[^\s@.]+(?:\.[^\s@.]+)+$/;
+const EMAIL_RE = /^[^\s@.]+(?:\.[^\s@.]+)*@[^\s@.]+(?:\.[^\s@.]+)+$/;
 const { NOTE_COLORS } = require('../models/note.model');
 
 function isNonEmptyString(v) {
@@ -27,7 +27,7 @@ function validateLogin(body = {}) {
   return errors;
 }
 
-// Helper validators 
+
 function validateTitle(title) {
   if (typeof title !== 'string') {
     return 'Title must be a string.';
