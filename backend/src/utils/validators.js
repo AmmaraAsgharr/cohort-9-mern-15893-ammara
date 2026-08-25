@@ -27,14 +27,21 @@ function validateLogin(body = {}) {
   return errors;
 }
 
+// Helper validators 
 function validateTitle(title) {
-  if (typeof title !== 'string') return 'Title must be a string.';
-  if (title.trim().length > 200) return 'Title must be 200 characters or fewer.';
+  if (typeof title !== 'string') {
+    return 'Title must be a string.';
+  }
+  if (title.trim().length > 200) {
+    return 'Title must be 200 characters or fewer.';
+  }
   return null;
 }
 
 function validateContent(content) {
-  if (typeof content !== 'string') return 'Content must be a string.';
+  if (typeof content !== 'string') {
+    return 'Content must be a string.';
+  }
   return null;
 }
 
@@ -53,7 +60,9 @@ function validateTags(tags) {
 }
 
 function validatePinned(pinned) {
-  if (typeof pinned !== 'boolean') return 'Pinned must be a boolean.';
+  if (typeof pinned !== 'boolean') {
+    return 'Pinned must be a boolean.';
+  }
   return null;
 }
 
@@ -63,48 +72,23 @@ function validateWordCount(wordCount) {
   }
   return null;
 }
- 
+
 function validateNote(body = {}, { partial = false } = {}) {
-  const errors = [];
   const { title, content, color, tags, pinned, wordCount } = body;
 
-  // Title
-  if (!partial || title !== undefined) {
-    const err = validateTitle(title);
-    if (err) errors.push(err);
-  }
+  const checks = [
+    { shouldRun: !partial || title !== undefined, value: title, validate: validateTitle },
+    { shouldRun: !partial || content !== undefined, value: content, validate: validateContent },
+    { shouldRun: color !== undefined, value: color, validate: validateColor },
+    { shouldRun: tags !== undefined, value: tags, validate: validateTags },
+    { shouldRun: pinned !== undefined, value: pinned, validate: validatePinned },
+    { shouldRun: wordCount !== undefined, value: wordCount, validate: validateWordCount },
+  ];
 
-  // Content
-  if (!partial || content !== undefined) {
-    const err = validateContent(content);
-    if (err) errors.push(err);
-  }
-
-  // Color
-  if (color !== undefined) {
-    const err = validateColor(color);
-    if (err) errors.push(err);
-  }
-
-  // Tags
-  if (tags !== undefined) {
-    const err = validateTags(tags);
-    if (err) errors.push(err);
-  }
-
-  // Pinned
-  if (pinned !== undefined) {
-    const err = validatePinned(pinned);
-    if (err) errors.push(err);
-  }
-
-  // WordCount
-  if (wordCount !== undefined) {
-    const err = validateWordCount(wordCount);
-    if (err) errors.push(err);
-  }
-
-  return errors;
+  return checks
+    .filter(c => c.shouldRun)
+    .map(c => c.validate(c.value))
+    .filter(Boolean);
 }
 
 module.exports = { validateSignup, validateLogin, validateNote, isNonEmptyString };

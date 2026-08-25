@@ -1,10 +1,21 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useColorCycle } from '../hooks/useColorCycle'
 import FilterChip from '../components/FilterChip'
 import SectionLabel from '../components/SectionLabel'
 import NoteGrid from '../components/NoteGrid'
 import EmptyState from '../components/EmptyState'
 import '../styles/dashboard.css'
+
+function stripTags(html) {
+  let out = ''
+  let inTag = false
+  for (const c of html) {
+    if (c === '<') inTag = true
+    else if (c === '>') inTag = false
+    else if (!inTag) out += c
+  }
+  return out
+}
 
 export default function Dashboard({
   user, notes, loading, error, actionMessage, onNewNote, onEditNote, onDeleteNote, onNavigate,
@@ -15,10 +26,20 @@ export default function Dashboard({
   const [view, setView] = useState('grid')
   const [deleteConfirm, setDeleteConfirm] = useState(null)
 
-  const filtered = notes
+  // ---- Pre‑compute stripped and lowercased content for each note ----
+  const searchableNotes = useMemo(
+    () => notes.map(n => ({
+      ...n,
+      _plainContent: stripTags(n.content).toLowerCase(),
+    })),
+    [notes]
+  )
+
+  // ---- Filter using pre‑computed content ----
+  const filtered = searchableNotes
     .filter(n => {
       const q = search.toLowerCase()
-       if (q && !n.title.toLowerCase().includes(q) && !n.content.replace(/<[^>]+>/g, '').toLowerCase().includes(q)) return false
+      if (q && !n.title.toLowerCase().includes(q) && !n._plainContent.includes(q)) return false
       if (activeTag && !n.tags.includes(activeTag)) return false
       return true
     })
