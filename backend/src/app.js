@@ -13,7 +13,7 @@ dotenv.config();
 
 const logger = pino();
 const app = express();
-
+app.disable('x-powered-by');
 const allowedOrigins = (process.env.CORS_ORIGIN || '')
   .split(',')
   .map((o) => o.trim())

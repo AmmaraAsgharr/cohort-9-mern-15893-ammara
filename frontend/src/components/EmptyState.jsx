@@ -26,6 +26,7 @@ export default function EmptyState({ search, onNewNote }) {
       </p>
       {!search && (
         <button
+         type="button"
           onClick={onNewNote}
           style={{
             padding: '10px 24px',

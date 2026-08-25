@@ -74,6 +74,7 @@ export default function AuthScreen() {
           <div className="auth-mode-toggle">
             {['login', 'signup'].map(m => (
               <button
+               type="button"
                 key={m}
                 onClick={() => { setMode(m); setErr('') }}
                 className={`auth-mode-btn ${mode === m ? 'active' : ''}`}

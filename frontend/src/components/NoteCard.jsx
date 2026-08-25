@@ -9,14 +9,14 @@ const COLOR_MAP = {
 
 export default function NoteCard({ note, view, onEdit, onDelete, isConfirmingDelete, onCancelDelete, onConfirmDelete }) {
   const bgColor = COLOR_MAP[note.color] || '#f5f5f5'
-  const plainText = note.content
-  .replace(/<[^>]*>/g, '')
-  .replace(/&nbsp;/g, ' ')
-  .replace(/&amp;/g, '&')
-  .replace(/&lt;/g, '<')
-  .replace(/&gt;/g, '>')
-  .replace(/&quot;/g, '"')
-  .replace(/&#39;/g, "'")
+    const plainText = note.content
+  .replace(/<[^>]{0,300}>/g, '')
+  .replaceAll('&nbsp;', ' ')
+  .replaceAll('&amp;', '&')
+  .replaceAll('&lt;', '<')
+  .replaceAll('&gt;', '>')
+  .replaceAll('&quot;', '"')
+  .replaceAll('&#39;', "'")
   const preview = plainText.length > 140 ? plainText.slice(0, 140) + '…' : plainText
 
   // Handle card click - only trigger edit if clicking on card, not on buttons
@@ -144,6 +144,7 @@ export default function NoteCard({ note, view, onEdit, onDelete, isConfirmingDel
         {isConfirmingDelete ? (
           <div style={{ display: 'flex', gap: 6 }}>
             <button
+               type="button"
               onClick={(e) => {
                 e.stopPropagation()
                 onConfirmDelete()
@@ -164,6 +165,7 @@ export default function NoteCard({ note, view, onEdit, onDelete, isConfirmingDel
               Confirm
             </button>
             <button
+               type="button"
               onClick={(e) => {
                 e.stopPropagation()
                 onCancelDelete()
@@ -187,6 +189,7 @@ export default function NoteCard({ note, view, onEdit, onDelete, isConfirmingDel
         ) : (
           <div style={{ display: 'flex', gap: 4 }}>
             <button
+            type="button"
               onClick={(e) => {
                 e.stopPropagation()
                 onEdit()
@@ -205,7 +208,8 @@ export default function NoteCard({ note, view, onEdit, onDelete, isConfirmingDel
               ✏️
             </button>
             <button
-              onClick={(e) => {
+               type="button"
+               onClick={(e) => {
                 e.stopPropagation()
                 onDelete()
               }}

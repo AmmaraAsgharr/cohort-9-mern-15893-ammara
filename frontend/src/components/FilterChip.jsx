@@ -1,6 +1,7 @@
 export default function FilterChip({ active, onClick, children }) {
   return (
     <button
+      type="button"
       onClick={onClick}
       style={{
         padding: '7px 16px',

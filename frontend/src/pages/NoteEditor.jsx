@@ -79,6 +79,7 @@ export default function NoteEditor({ note, onSave, onCancel }) {
       <header className="note-editor-header" style={{ borderBottomColor: `${c.border}60` }}>
         <div className="note-editor-header-left">
           <button
+            type="button"
             onClick={onCancel}
             className="back-button"
           >
@@ -95,6 +96,7 @@ export default function NoteEditor({ note, onSave, onCancel }) {
           </span>
           
           <button
+            type="button"
             onClick={() => setPinned(p => !p)}
             className={`pin-button ${pinned ? 'pinned' : ''}`}
             aria-label={pinned ? 'Unpin note' : 'Pin note'}
@@ -104,6 +106,7 @@ export default function NoteEditor({ note, onSave, onCancel }) {
           </button>
 
           <button
+            type="button"
             onClick={handleSave}
             onMouseEnter={saveBtn.start}
             onMouseLeave={saveBtn.stop}
@@ -144,6 +147,7 @@ export default function NoteEditor({ note, onSave, onCancel }) {
         <Divider />
         {NOTE_COLORS.map(nc => (
           <button
+            type="button"
             key={nc.border}
             onClick={() => format('foreColor', nc.border)}
             className="color-dot"
@@ -179,6 +183,7 @@ export default function NoteEditor({ note, onSave, onCancel }) {
             <span className="meta-label">Color:</span>
             {NOTE_COLORS.map(nc => (
               <button
+               type="button"
                 key={nc.id}
                 onClick={() => setColor(nc.id)}
                 title={nc.label}
@@ -201,7 +206,8 @@ export default function NoteEditor({ note, onSave, onCancel }) {
             {TAGS.map(tag => {
               const on = tags.includes(tag);
               return (
-                <button
+                <button 
+                  type="button"
                   key={tag}
                   onClick={() => setTags(p => on ? p.filter(t => t !== tag) : [...p, tag])}
                   className={`tag-button ${on ? 'active' : ''}`}

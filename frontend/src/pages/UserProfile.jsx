@@ -21,7 +21,10 @@ export default function UserProfile({ user, notes, onLogout, onBack }) {
   return (
     <div className="screen-enter user-profile">
       <header className="profile-header">
-        <button onClick={onBack} className="back-button">
+        <button 
+         type="button"
+         onClick={onBack} 
+         className="back-button">
           ← Dashboard
         </button>
         <span className="profile-title">Profile</span>
@@ -53,6 +56,7 @@ export default function UserProfile({ user, notes, onLogout, onBack }) {
                 <p className="profile-user-email">{user.email}</p>
               </div>
               <button
+                type="button"
                 onMouseEnter={logoutStart}
                 onMouseLeave={logoutStop}
                 onClick={onLogout}
@@ -89,7 +93,7 @@ export default function UserProfile({ user, notes, onLogout, onBack }) {
         {topTags.length > 0 && (
           <div className="top-tags-card">
             <h3 className="top-tags-title">
-              <span className="top-tags-dot" />
+              <span className="top-tags-dot" />{' '}
               Top Tags
             </h3>
             <div className="top-tags-list">

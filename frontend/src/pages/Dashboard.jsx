@@ -18,7 +18,7 @@ export default function Dashboard({
   const filtered = notes
     .filter(n => {
       const q = search.toLowerCase()
-      if (q && !n.title.toLowerCase().includes(q) && !n.content.replace(/<[^>]*>/g, '').toLowerCase().includes(q)) return false
+       if (q && !n.title.toLowerCase().includes(q) && !n.content.replace(/<[^>]+>/g, '').toLowerCase().includes(q)) return false
       if (activeTag && !n.tags.includes(activeTag)) return false
       return true
     })
@@ -45,6 +45,7 @@ export default function Dashboard({
         <div className="dashboard-header-right">
           <DashNewButton onClick={onNewNote} />
           <button
+            type="button"
             onClick={() => onNavigate('profile')}
             className="dashboard-avatar-btn"
             aria-label="View profile"
@@ -87,6 +88,7 @@ export default function Dashboard({
           </select>
           {['grid', 'list'].map(v => (
             <button
+              type="button"
               key={v}
               onClick={() => setView(v)}
               className={`dashboard-view-btn ${view === v ? 'active' : ''}`}
@@ -146,6 +148,7 @@ function DashNewButton({ onClick }) {
   const { bg, start, stop } = useColorCycle('#FF6B00')
   return (
     <button
+      type="button"
       onClick={onClick}
       onMouseEnter={start}
       onMouseLeave={stop}
